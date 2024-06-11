@@ -197,7 +197,7 @@ MonoBehaviour:
   Threshold: 0
   iterations: 1
   smoothingFactor: 0.5
-  ShapeName: Square
+  ShapeName: Triangle
   DrawnShapes: []
   Hand: {fileID: 1742278863}
   Pressed: 0
@@ -213,8 +213,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bda889f45ae3ad47907f1a7288a97ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShapeData: []
-  Shapename: Square
+  Shapename:
+  - Square
+  - Triangle
   DEBUG: 0
 --- !u!4 &58962652
 Transform:

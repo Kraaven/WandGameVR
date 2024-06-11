@@ -7,16 +7,22 @@ using UnityEngine;
 
 public class LineContainer : MonoBehaviour
 {
-    public Vector3[] ShapeData;
-    public string Shapename;
+    public List<Vector3[]> ShapeData;
+    public List<string> Shapename;
     public bool DEBUG;
     
     
     // Start is called before the first frame update
     void Start()
     {
+        ShapeData = new List<Vector3[]>();
+        
         Directory.CreateDirectory(Application.dataPath + "/Shapes");
-        ShapeData = JsonConvert.DeserializeObject<Vector3[]>(File.ReadAllText(Application.dataPath + $"/Shapes/{Shapename}.txt"));
+        foreach (var name in Shapename)
+        {
+            Debug.Log($"Loading {name}");
+            ShapeData.Add(JsonConvert.DeserializeObject<Vector3[]>(File.ReadAllText(Application.dataPath + $"/Shapes/{name}.txt")));
+        }
         
         // var ShownLine = new GameObject("Line").AddComponent<LineRenderer>();
         // ShownLine.positionCount = 60;
@@ -30,20 +36,40 @@ public class LineContainer : MonoBehaviour
     
     public void CheckData(Vector3[] Sample)
     {
-        
-        float[] Deviations = new float[60];
-        float DeviAverage = 0;
-        
-        for (int i = 0; i < 60; i++)
+        float[] Deviations = new float[] { };
+
+        // (float, string) Best = (500,"null");
+        Debug.Log($"Shapes: {ShapeData.Count}, Names: {Shapename.Count}");
+        List<(float, string)> CrossChecks = new List<(float, string)>();
+        for (int i = 0; i < ShapeData.Count; i++)
         {
-            Deviations[i] = Vector3.Distance(Sample[i], ShapeData[i]);
-            DeviAverage += Deviations[i];
+            Deviations = new float[60];
+            float DeviAverage = 0;
+            
+            
+            var N = Shapename[i];
+            var Dat = ShapeData[i];
+            Debug.Log($"Checking with shape: {N}");
+            for (int j = 0; j < 60; j++)
+            {
+                Deviations[j] = Vector3.Distance(Sample[j], Dat[j]);
+                DeviAverage += Deviations[j];
+            }
+            DeviAverage /= 60;
+            
+            CrossChecks.Add((DeviAverage,N));
         }
         
-        DeviAverage /= 60;
         
-        Debug.Log($"{DeviAverage} is the Mean Deviation");
+        
+        
+        
+        // Debug.Log($"{Best} is the Mean Deviation");
         // Debug.Log(String.Join(", ",Deviations));
+        foreach (var valueTuple in CrossChecks)
+        {
+            Debug.Log(valueTuple);
+        }
 
         if (DEBUG)
         {
@@ -67,9 +93,9 @@ public class LineContainer : MonoBehaviour
             ShownLine2.startWidth = 0.1f;
             ShownLine2.endWidth = 0.1f;
             
-            ShownLine2.SetPositions(ShapeData);
-            ShownLine2.material = new Material(Shader.Find("Unlit/Color"));
-            ShownLine2.material.color = Color.red;
+            // ShownLine2.SetPositions(ShapeData);
+            // ShownLine2.material = new Material(Shader.Find("Unlit/Color"));
+            // ShownLine2.material.color = Color.red;
         }
         
 
