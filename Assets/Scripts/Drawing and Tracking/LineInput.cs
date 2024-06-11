@@ -109,6 +109,7 @@ public class LineInput : MonoBehaviour
         //     DrawnShapes.RemoveAt(DrawnShapes.Count-1);
         //     ShapeSamples.RemoveAt(ShapeSamples.Count-1);
         // }
+        //Commit
 
         if (XRINPUT.GetLeftSecondaryDown())
         {
