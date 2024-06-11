@@ -215,7 +215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShapeData: []
   Shapename: Square
-  DEBUG: 1
+  DEBUG: 0
 --- !u!4 &58962652
 Transform:
   m_ObjectHideFlags: 0
