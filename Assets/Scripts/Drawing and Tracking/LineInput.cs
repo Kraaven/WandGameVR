@@ -20,6 +20,8 @@ public class LineInput : MonoBehaviour
     public List<GameObject> DrawnShapes;
     public Transform Hand;
     private TriggerInputDetector XRINPUT;
+
+    
     
     public bool Pressed;
     void Start()

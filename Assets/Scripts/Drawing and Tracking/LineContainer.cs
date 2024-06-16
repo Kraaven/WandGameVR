@@ -2,14 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using Newtonsoft.Json;
 using UnityEngine;
-
 public class LineContainer : MonoBehaviour
 {
     public List<Vector3[]> ShapeData;
     public List<string> Shapename;
     public bool DEBUG;
+    public float minDistance = float.MaxValue;
+    
+    public List<GameObject> Shapes;
     
     
     // Start is called before the first frame update
@@ -32,72 +37,196 @@ public class LineContainer : MonoBehaviour
         // ShownLine.SetPositions(ShapeData);
         // ShownLine.material = new Material(Shader.Find("Unlit/Color"));
         // ShownLine.material.color = Color.white;
+        
     }
     
-    public void CheckData(Vector3[] Sample)
+        public void CheckData(Vector3[] drawnShape)
     {
-        float[] Deviations = new float[] { };
+        if (ShapeData == null || ShapeData.Count == 0)
+        {
+            Debug.LogError("No stored shapes to compare.");
+            return;
+        }
 
-        // (float, string) Best = (500,"null");
-        Debug.Log($"Shapes: {ShapeData.Count}, Names: {Shapename.Count}");
-        List<(float, string)> CrossChecks = new List<(float, string)>();
+        int bestShapeIndex = -1;
+
         for (int i = 0; i < ShapeData.Count; i++)
         {
-            Deviations = new float[60];
-            float DeviAverage = 0;
-            
-            
-            var N = Shapename[i];
-            var Dat = ShapeData[i];
-            Debug.Log($"Checking with shape: {N}");
-            for (int j = 0; j < 60; j++)
+            float distance = ComputeProcrustesDistance(drawnShape, ShapeData[i]);
+            if (distance < minDistance)
             {
-                Deviations[j] = Vector3.Distance(Sample[j], Dat[j]);
-                DeviAverage += Deviations[j];
+                minDistance = distance;
+                bestShapeIndex = i;
             }
-            DeviAverage /= 60;
-            
-            CrossChecks.Add((DeviAverage,N));
         }
-        
-        
-        
-        
-        
-        // Debug.Log($"{Best} is the Mean Deviation");
-        // Debug.Log(String.Join(", ",Deviations));
-        foreach (var valueTuple in CrossChecks)
+
+        if (bestShapeIndex >= 0)
         {
-            Debug.Log(valueTuple);
+            Debug.Log($"Best matching shape is at shape: {Shapename[bestShapeIndex]} with a distance of: {minDistance}");
+            DisplayShape(Shapename[bestShapeIndex]);
         }
-
-        if (DEBUG)
+        else
         {
-            var ShownLine = new GameObject("Line").AddComponent<LineRenderer>();
-            ShownLine.positionCount = 60;
-            ShownLine.startWidth = 0.1f;
-            ShownLine.endWidth = 0.1f;
-
-            var Chart = new Vector3[60];
-
-            for (int i = 0; i < 60; i++)
-            {
-                Chart[i] = new Vector3((float)i/5, Mathf.Pow(Deviations[i],4), 0);
-            }
-            ShownLine.SetPositions(Chart);
-            ShownLine.material = new Material(Shader.Find("Unlit/Color"));
-            ShownLine.material.color = Color.white;
-            
-            var ShownLine2 = new GameObject("Line").AddComponent<LineRenderer>();
-            ShownLine2.positionCount = 60;
-            ShownLine2.startWidth = 0.1f;
-            ShownLine2.endWidth = 0.1f;
-            
-            // ShownLine2.SetPositions(ShapeData);
-            // ShownLine2.material = new Material(Shader.Find("Unlit/Color"));
-            // ShownLine2.material.color = Color.red;
+            Debug.Log("No matching shape found.");
         }
-        
-
     }
+
+    private float ComputeProcrustesDistance(Vector3[] shape1, Vector3[] shape2)
+    {
+        // Normalize and align the shapes
+        shape1 = NormalizeShape(shape1);
+        shape2 = NormalizeShape(shape2);
+
+        // Compute the Procrustes distance
+        var alignedShape2 = AlignShapes(shape1, shape2, out float disparity);
+
+        return disparity;
+    }
+
+    private Vector3[] NormalizeShape(Vector3[] shape)
+    {
+        // Translate the shape to the origin
+        shape = TranslateToOrigin(shape);
+
+        // Scale the shape to ensure the distance between the first two points is 1
+        shape = ScaleToSetSize(shape, 1.0f);
+
+        return shape;
+    }
+
+    private Vector3[] AlignShapes(Vector3[] shape1, Vector3[] shape2, out float disparity)
+    {
+        // Center shapes
+        Vector3[] centeredShape1 = CenterShape(shape1);
+        Vector3[] centeredShape2 = CenterShape(shape2);
+
+        // Calculate the optimal rotation matrix using Singular Value Decomposition (SVD)
+        Matrix4x4 rotationMatrix = CalculateOptimalRotation(centeredShape1, centeredShape2);
+
+        // Apply the rotation to shape2
+        Vector3[] alignedShape2 = ApplyRotation(centeredShape2, rotationMatrix);
+
+        // Calculate the disparity (sum of squared distances between corresponding points)
+        disparity = CalculateDisparity(centeredShape1, alignedShape2);
+
+        return alignedShape2;
+    }
+
+    private Vector3[] CenterShape(Vector3[] shape)
+    {
+        Vector3 centroid = shape.Aggregate(Vector3.zero, (acc, p) => acc + p) / shape.Length;
+        return shape.Select(p => p - centroid).ToArray();
+    }
+
+    private Matrix4x4 CalculateOptimalRotation(Vector3[] shape1, Vector3[] shape2)
+    {
+        // Create MathNet matrices from the shapes
+        var matrix1 = DenseMatrix.OfArray(To2DArray(shape1));
+        var matrix2 = DenseMatrix.OfArray(To2DArray(shape2));
+
+        // Calculate the cross-covariance matrix
+        var covarianceMatrix = matrix1.TransposeThisAndMultiply(matrix2);
+
+        // Perform Singular Value Decomposition (SVD)
+        var svd = covarianceMatrix.Svd();
+
+        // Calculate the rotation matrix
+        var rotationMatrix = svd.U * svd.VT;
+
+        // Convert the MathNet matrix to Unity's Matrix4x4
+        return ToMatrix4x4(rotationMatrix);
+    }
+
+    private double[,] To2DArray(Vector3[] vectors)
+    {
+        var array = new double[vectors.Length, 3];
+        for (int i = 0; i < vectors.Length; i++)
+        {
+            array[i, 0] = vectors[i].x;
+            array[i, 1] = vectors[i].y;
+            array[i, 2] = vectors[i].z;
+        }
+        return array;
+    }
+
+    private Matrix4x4 ToMatrix4x4(Matrix<double> matrix)
+    {
+        var result = Matrix4x4.identity;
+        result.m00 = (float)matrix[0, 0];
+        result.m01 = (float)matrix[0, 1];
+        result.m02 = (float)matrix[0, 2];
+        result.m10 = (float)matrix[1, 0];
+        result.m11 = (float)matrix[1, 1];
+        result.m12 = (float)matrix[1, 2];
+        result.m20 = (float)matrix[2, 0];
+        result.m21 = (float)matrix[2, 1];
+        result.m22 = (float)matrix[2, 2];
+        return result;
+    }
+
+    private Vector3[] ApplyRotation(Vector3[] shape, Matrix4x4 rotationMatrix)
+    {
+        return shape.Select(p => rotationMatrix.MultiplyPoint3x4(p)).ToArray();
+    }
+
+    private float CalculateDisparity(Vector3[] shape1, Vector3[] shape2)
+    {
+        float disparity = 0.0f;
+        for (int i = 0; i < shape1.Length; i++)
+        {
+            disparity += (shape1[i] - shape2[i]).sqrMagnitude;
+        }
+        return disparity;
+    }
+
+    private Vector3[] TranslateToOrigin(Vector3[] points)
+    {
+        if (points.Length == 0)
+        {
+            Debug.LogError("No points to translate.");
+            return points;
+        }
+
+        Vector3[] translatedPoints = new Vector3[points.Length];
+        Vector3 offset = points[0]; // Offset to move the first point to (0,0,0)
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            translatedPoints[i] = points[i] - offset;
+        }
+
+        return translatedPoints;
+    }
+
+    public Vector3[] ScaleToSetSize(Vector3[] points, float setSize)
+    {
+        if (points.Length < 2)
+        {
+            Debug.LogError("Not enough points to scale.");
+            return points;
+        }
+
+        Vector3 direction = points[1] - points[0];
+        float currentDistance = direction.magnitude;
+        float scaleFactor = setSize / currentDistance;
+
+        Vector3[] scaledPoints = new Vector3[points.Length];
+        scaledPoints[0] = points[0];
+        for (int i = 1; i < points.Length; i++)
+        {
+            scaledPoints[i] = points[0] + (points[i] - points[0]) * scaleFactor;
+        }
+
+        return scaledPoints;
+    }
+
+
+    void DisplayShape(string Shape)
+    {
+        foreach (var shape in Shapes)
+        {
+            shape.SetActive(shape.name == Shape);
+        }
+    }
+    
 }
