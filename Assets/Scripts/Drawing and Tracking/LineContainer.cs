@@ -6,6 +6,7 @@ using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using Newtonsoft.Json;
+using Spells;
 using UnityEngine;
 public class LineContainer : MonoBehaviour
 {
@@ -13,14 +14,18 @@ public class LineContainer : MonoBehaviour
     public List<string> Shapename;
     public bool DEBUG;
     public float CheckThreshold;
+    private Transform TIP;
     
-    public List<GameObject> Shapes;
+    //public List<GameObject> Shapes;
+
+    public List<Spell> Spells;
     
     
     // Start is called before the first frame update
     void Start()
     {
         ShapeData = new List<Vector3[]>();
+        TIP = GetComponent<LineInput>().Hand;
         
         Directory.CreateDirectory(Application.dataPath + "/Shapes");
         foreach (var name in Shapename)
@@ -45,7 +50,7 @@ public class LineContainer : MonoBehaviour
         for (int i = 0; i < ShapeData.Count; i++)
         {
             float distance = ComputeProcrustesDistance(drawnShape, ShapeData[i]);
-            //Debug.Log($"{Shapename[i]} has the deviation {distance}");
+            Debug.Log($"{Shapename[i]} has the deviation {distance}");
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -216,9 +221,21 @@ public class LineContainer : MonoBehaviour
 
     void DisplayShape(string Shape)
     {
-        foreach (var shape in Shapes)
+        switch (Shape)
         {
-            shape.SetActive(shape.name == Shape);
+            case "Square":
+                Instantiate(Spells[0], TIP.position,TIP.rotation);
+                break;
+            case "Triangle":
+                Instantiate(Spells[1], TIP.position,TIP.rotation);
+                break;
+            
+            case "Teleport":
+                Instantiate(Spells[2], TIP.position,TIP.rotation);
+                break;
+            default:
+                Debug.Log("Spell does not exist");
+                break;
         }
     }
     

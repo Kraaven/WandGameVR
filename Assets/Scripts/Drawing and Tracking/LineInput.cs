@@ -53,20 +53,20 @@ public class LineInput : MonoBehaviour
                     SmoothSpline(Line, iterations, smoothingFactor);
 
 
-                    var Seepath = new GameObject("Drawn", new[] { typeof(LineRenderer) });
-                    var L = Seepath.GetComponent<LineRenderer>();
-                    //Debug.Log(Line.Count);
-                    L.positionCount = 60;
-                    L.SetPositions(ConvertSplineToArray(Line, 60));
-                    L.startWidth = 0.01f;
-                    L.endWidth = 0.01f;
-                    L.material = new Material(Shader.Find("Unlit/Color"));
-                    L.material.color = Color.red;
+                    // var Seepath = new GameObject("Drawn", new[] { typeof(LineRenderer) });
+                    // var L = Seepath.GetComponent<LineRenderer>();
+                    // //Debug.Log(Line.Count);
+                    // L.positionCount = 60;
+                    // L.SetPositions(ConvertSplineToArray(Line, 60));
+                    // L.startWidth = 0.01f;
+                    // L.endWidth = 0.01f;
+                    // L.material = new Material(Shader.Find("Unlit/Color"));
+                    // L.material.color = Color.red;
                     
-                    var ShownLine = new GameObject("Line").AddComponent<LineRenderer>();
-                    ShownLine.positionCount = 60;
-                    ShownLine.startWidth = 0.1f;
-                    ShownLine.endWidth = 0.1f;
+                    // var ShownLine = new GameObject("Line").AddComponent<LineRenderer>();
+                    // ShownLine.positionCount = 60;
+                    // ShownLine.startWidth = 0.1f;
+                    // ShownLine.endWidth = 0.1f;
 
                     //var Points = TranslateToOrigin(RotateToUp(ScaleToSetSize(ConvertSplineToArray(Line, 60),0.45f)));
                     
@@ -78,12 +78,12 @@ public class LineInput : MonoBehaviour
                     
                     
                     ShapeSamples.Add(Points);
-                    DrawnShapes.Add(ShownLine.gameObject);
+                    // DrawnShapes.Add(ShownLine.gameObject);
                     
                     
-                    ShownLine.SetPositions(Points);
-                    ShownLine.material = new Material(Shader.Find("Unlit/Color"));
-                    ShownLine.material.color = Color.black;
+                    // ShownLine.SetPositions(Points);
+                    // ShownLine.material = new Material(Shader.Find("Unlit/Color"));
+                    // ShownLine.material.color = Color.black;
                 }
 
                 Line.Clear();
