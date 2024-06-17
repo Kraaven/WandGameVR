@@ -21,8 +21,6 @@ public class LineInput : MonoBehaviour
     public List<Vector3[]> ShapeSamples;
     public List<GameObject> DrawnShapes;
     public Transform Hand;
-    private TriggerInputDetector XRINPUT;
-    public InputActionProperty Trigger;
 
     
     
@@ -32,13 +30,12 @@ public class LineInput : MonoBehaviour
         Line = GetComponent<SplineContainer>().Splines[0];
         ShapeSamples = new List<Vector3[]>();
         DrawnShapes = new List<GameObject>();
-        XRINPUT = FindObjectOfType<TriggerInputDetector>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (XRINPUT.GetRightPrimaryDown() || Trigger.action.WasPressedThisFrame())
+        if (XrInput.Right_Primary.IsPressed())
         {
             Pressed = true;
             Line.Add(new BezierKnot(GetInputPosition()),TangentMode.AutoSmooth);
@@ -47,7 +44,7 @@ public class LineInput : MonoBehaviour
         }
         else
         {
-            if (!XRINPUT.GetRightPrimary() && Pressed)
+            if (XrInput.Right_Primary.WasReleasedThisFrame()&& Pressed)
             {
                 Debug.Log("ButtonUp");
                 Pressed = false;
@@ -58,7 +55,7 @@ public class LineInput : MonoBehaviour
 
                     var Seepath = new GameObject("Drawn", new[] { typeof(LineRenderer) });
                     var L = Seepath.GetComponent<LineRenderer>();
-                    Debug.Log(Line.Count);
+                    //Debug.Log(Line.Count);
                     L.positionCount = 60;
                     L.SetPositions(ConvertSplineToArray(Line, 60));
                     L.startWidth = 0.01f;
@@ -101,7 +98,7 @@ public class LineInput : MonoBehaviour
         }
 
 
-        if (XRINPUT.GetLeftPrimaryDown())
+        if (XrInput.Left_Primary.WasPressedThisFrame())
         {
             Debug.Log($"saving with samples: {ShapeSamples.Count}");
             var Avgs = JsonConvert.SerializeObject(AveragePoints(ShapeSamples));
@@ -115,7 +112,7 @@ public class LineInput : MonoBehaviour
         //     ShapeSamples.RemoveAt(ShapeSamples.Count-1);
         // }
 
-        if (XRINPUT.GetLeftSecondaryDown())
+        if (XrInput.Left_Secondary.WasPressedThisFrame())
         {
             GetComponent<LineContainer>().CheckData(ShapeSamples.Last());
         }

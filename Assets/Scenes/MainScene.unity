@@ -189,7 +189,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58962648}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b940b413cd8b4b548be0793117a81e74, type: 3}
   m_Name: 
@@ -221,7 +221,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58962648}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1bda889f45ae3ad47907f1a7288a97ee, type: 3}
   m_Name: 
@@ -230,7 +230,7 @@ MonoBehaviour:
   - Square
   - Triangle
   DEBUG: 0
-  minDistance: 100
+  CheckThreshold: 1000
   Shapes:
   - {fileID: 5233112405626213734}
   - {fileID: 832149484483590610}
@@ -260,6 +260,7 @@ GameObject:
   m_Component:
   - component: {fileID: 78599751}
   - component: {fileID: 78599750}
+  - component: {fileID: 78599752}
   m_Layer: 0
   m_Name: XR Interaction Manager
   m_TagString: Untagged
@@ -296,6 +297,149 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &78599752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78599749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ca64a929e2881d44b1560a1770eaff7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DEBUG: 1
+  LeftTrigger:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Trigger
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 96d9310b-b084-4016-afe4-3eeb17371536
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -5982496924579745919, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  LeftGrip:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Grip
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: aab98f82-4ce2-4d7c-829d-7e6663d75ea4
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  LeftPrimary:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Primary
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 7b234d3f-a842-4c30-85dc-d686c1ee40f7
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 2671626884060160936, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  LeftSecondary:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Secondary
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 80030a3a-8275-4a30-9055-1d0336328bbb
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 5377411708117968179, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  LeftJoyStick:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Joy Stick
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 8bdc5657-24c9-4688-bd28-fc799156ef0b
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 3954630673802170970, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  RightTrigger:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Trigger
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 4a110e4e-07b3-4c7c-9c93-5c9b77b59889
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  RightGrip:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Grip
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 22fc4fd5-b081-4cc3-af63-7acc03cff946
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  RightPrimary:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Primary
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 25cbd954-6ce9-4540-b299-547f80904897
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -8846618803486163042, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  RightSecondary:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Secondary
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: b24db5a7-9cfc-43bf-83c4-abbcc7e30f9c
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -7442080625745982777, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  RightJoyStick:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Joy Stick
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 8f1b122e-fcba-4fe0-8e8c-14094e9f38d3
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 3745829644407144266, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
 --- !u!1 &132129146
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,8 +956,8 @@ Transform:
   m_GameObject: {fileID: 529463314}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.2, y: 6.6, z: -0.7}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1742278863}
@@ -1610,63 +1754,6 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!1 &686653112
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 686653115}
-  - component: {fileID: 686653114}
-  - component: {fileID: 686653113}
-  m_Layer: 0
-  m_Name: XR_INPUT
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &686653113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686653112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc4b0c31d1d2a304fa5023d9c7776107, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &686653114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686653112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c2e0da8580e20b478d76686479c1169, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &686653115
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686653112}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.020129204, y: 1.1656384, z: 0.52833223}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &727985783
 GameObject:
   m_ObjectHideFlags: 0
@@ -2909,6 +2996,5 @@ SceneRoots:
   - {fileID: 1187909465}
   - {fileID: 78599751}
   - {fileID: 2038082134}
-  - {fileID: 686653115}
   - {fileID: 58962652}
   - {fileID: 543450653412060253}

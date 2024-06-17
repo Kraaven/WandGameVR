@@ -12,7 +12,7 @@ public class LineContainer : MonoBehaviour
     public List<Vector3[]> ShapeData;
     public List<string> Shapename;
     public bool DEBUG;
-    public float minDistance = float.MaxValue;
+    public float CheckThreshold;
     
     public List<GameObject> Shapes;
     
@@ -29,19 +29,11 @@ public class LineContainer : MonoBehaviour
             ShapeData.Add(JsonConvert.DeserializeObject<Vector3[]>(File.ReadAllText(Application.dataPath + $"/Shapes/{name}.txt")));
         }
         
-        // var ShownLine = new GameObject("Line").AddComponent<LineRenderer>();
-        // ShownLine.positionCount = 60;
-        // ShownLine.startWidth = 0.1f;
-        // ShownLine.endWidth = 0.1f;
-        //
-        // ShownLine.SetPositions(ShapeData);
-        // ShownLine.material = new Material(Shader.Find("Unlit/Color"));
-        // ShownLine.material.color = Color.white;
-        
     }
     
         public void CheckData(Vector3[] drawnShape)
-    {
+        {
+            var minDistance = CheckThreshold;
         if (ShapeData == null || ShapeData.Count == 0)
         {
             Debug.LogError("No stored shapes to compare.");
@@ -53,6 +45,7 @@ public class LineContainer : MonoBehaviour
         for (int i = 0; i < ShapeData.Count; i++)
         {
             float distance = ComputeProcrustesDistance(drawnShape, ShapeData[i]);
+            Debug.Log($"{Shapename[i]} has the deviation {distance}");
             if (distance < minDistance)
             {
                 minDistance = distance;
