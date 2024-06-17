@@ -45,7 +45,7 @@ public class LineContainer : MonoBehaviour
         for (int i = 0; i < ShapeData.Count; i++)
         {
             float distance = ComputeProcrustesDistance(drawnShape, ShapeData[i]);
-            Debug.Log($"{Shapename[i]} has the deviation {distance}");
+            //Debug.Log($"{Shapename[i]} has the deviation {distance}");
             if (distance < minDistance)
             {
                 minDistance = distance;

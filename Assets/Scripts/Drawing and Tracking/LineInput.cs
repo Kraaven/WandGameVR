@@ -88,6 +88,8 @@ public class LineInput : MonoBehaviour
 
                 Line.Clear();
                 Line = new Spline();
+                
+                GetComponent<LineContainer>().CheckData(ShapeSamples.Last());
             }
         }
 
@@ -103,18 +105,6 @@ public class LineInput : MonoBehaviour
             Debug.Log($"saving with samples: {ShapeSamples.Count}");
             var Avgs = JsonConvert.SerializeObject(AveragePoints(ShapeSamples));
             File.WriteAllText(Application.dataPath+$"/Shapes/{ShapeName}.txt",Avgs);
-        }
-
-        // if (XRINPUT.GetLeftSecondaryDown())
-        // {
-        //     Destroy(DrawnShapes[DrawnShapes.Count-1]);
-        //     DrawnShapes.RemoveAt(DrawnShapes.Count-1);
-        //     ShapeSamples.RemoveAt(ShapeSamples.Count-1);
-        // }
-
-        if (XrInput.Left_Secondary.WasPressedThisFrame())
-        {
-            GetComponent<LineContainer>().CheckData(ShapeSamples.Last());
         }
         
     }
