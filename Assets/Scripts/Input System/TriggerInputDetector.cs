@@ -19,6 +19,7 @@ public class TriggerInputDetector : MonoBehaviour
         private bool leftBflag;
         private bool rightAflag;
         private bool rightBflag;
+        
 
 
         private void Start()

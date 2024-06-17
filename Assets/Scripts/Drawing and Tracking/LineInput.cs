@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Splines;
 
 public class LineInput : MonoBehaviour
@@ -20,6 +22,7 @@ public class LineInput : MonoBehaviour
     public List<GameObject> DrawnShapes;
     public Transform Hand;
     private TriggerInputDetector XRINPUT;
+    public InputActionProperty Trigger;
 
     
     
@@ -35,7 +38,7 @@ public class LineInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (XRINPUT.GetRightPrimaryDown())
+        if (XRINPUT.GetRightPrimaryDown() || Trigger.action.WasPressedThisFrame())
         {
             Pressed = true;
             Line.Add(new BezierKnot(GetInputPosition()),TangentMode.AutoSmooth);
