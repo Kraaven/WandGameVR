@@ -240,6 +240,13 @@ MonoBehaviour:
   - c
   - d
   - e
+  - f
+  - g
+  - h
+  - i
+  - j
+  - k
+  - l
   DEBUG: 1
   CheckThreshold: 0
 --- !u!114 &538345903
@@ -257,7 +264,7 @@ MonoBehaviour:
   Threshold: 0.1
   iterations: 1
   smoothingFactor: 0.5
-  ShapeName: f
+  ShapeName: l
   DrawnShapes: []
   Hand: {fileID: 1943413352}
   Pressed: 0
