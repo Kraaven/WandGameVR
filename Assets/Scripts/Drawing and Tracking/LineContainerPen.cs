@@ -7,6 +7,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using Newtonsoft.Json;
 using Spells;
+using TMPro;
 using UnityEngine;
 public class LineContainerPen : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class LineContainerPen : MonoBehaviour
     public bool DEBUG;
     public float CheckThreshold;
     private Transform TIP;
+    public TMP_Text Letter;
+    public List<(string, float)> Percentages;
+    public GameObject LeftColumn;
+    public GameObject RightColumn;
+    public static string CurrrentLetter = "";
+    public TMP_Text WordBuilder;
     
     //public List<GameObject> Shapes;
 
@@ -48,36 +55,78 @@ public class LineContainerPen : MonoBehaviour
         
     }
     
-        public void CheckData(Vector3[] drawnShape)
-        {
-            var minDistance = CheckThreshold;
+    public void CheckData(Vector3[] drawnShape)
+    {
+        Percentages = new List<ValueTuple<string, float>>();
+        var minDistance = float.MaxValue;
         if (ShapeData == null || ShapeData.Count == 0)
         {
             Debug.LogError("No stored shapes to compare.");
             return;
         }
 
-        int bestShapeIndex = -1;
+        List<float> distances = new List<float>();
 
+        // First pass: calculate all distances and find the minimum
         for (int i = 0; i < ShapeData.Count; i++)
         {
             float distance = ComputeProcrustesDistance(drawnShape, ShapeData[i]);
+            distances.Add(distance);
             Debug.Log($"{Shapename[i]} has the deviation {distance}");
             if (distance < minDistance)
             {
                 minDistance = distance;
+            }
+        }
+
+        int bestShapeIndex = -1;
+        float bestPercentage = 0f;
+
+        // Second pass: calculate percentages and populate the Percentages list
+        for (int i = 0; i < distances.Count; i++)
+        {
+            float percentage = (minDistance / distances[i]) * 100f;
+            Percentages.Add((Shapename[i], percentage));
+        
+            if (percentage > bestPercentage)
+            {
+                bestPercentage = percentage;
                 bestShapeIndex = i;
             }
         }
 
-        if (bestShapeIndex >= 0)
+        // Sort Percentages list in descending order of percentage
+        Percentages.Sort((a, b) => b.Item2.CompareTo(a.Item2));
+
+        var msg = "";
+        foreach (var value in Percentages)
         {
-            Debug.Log($"Best matching shape is at shape: {Shapename[bestShapeIndex]} with a distance of: {minDistance}");
-            // DisplayShape(Shapename[bestShapeIndex]);
+            msg += $"{value.Item1} : {value.Item2}%\n";
         }
-        else
+        
+        Debug.Log(msg);
+
+        CurrrentLetter = Percentages[0].Item1;
+
+        // if (bestShapeIndex >= 0)
+        // {
+        //     Debug.Log($"Best matching shape is: {Shapename[bestShapeIndex]} with a similarity of: {bestPercentage}%");
+        //     Letter.text = Shapename[bestShapeIndex];
+        // }
+        // else
+        // {
+        //     Debug.Log("No matching shape found.");
+        //     Letter.text = "Null";
+        // }
+
+        for (int i = 0; i < 13; i++)
         {
-            Debug.Log("No matching shape found.");
+            LeftColumn.transform.GetChild(i).GetComponent<TMP_Text>().text = $"\"{Percentages[i].Item1}\" : {Percentages[i].Item2}%";
+        }
+
+        for (int i = 0; i < 13; i++)
+        {
+            RightColumn.transform.GetChild(i).GetComponent<TMP_Text>().text = $"\"{Percentages[i+13].Item1}\" : {Percentages[i+13].Item2}%";
         }
     }
 
@@ -250,5 +299,10 @@ public class LineContainerPen : MonoBehaviour
     //             break;
     //     }
     // }
-    
+
+    public void AddLetter()
+    {
+        WordBuilder.text += CurrrentLetter;
+    }
+
 }

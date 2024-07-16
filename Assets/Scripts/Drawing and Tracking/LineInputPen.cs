@@ -35,7 +35,7 @@ public class LineInputPen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (XrInput.Right_Primary.IsPressed())
+        if (XrInput.Right_Grip.IsPressed())
         {
             Pressed = true;
             Line.Add(new BezierKnot(GetInputPosition()),TangentMode.AutoSmooth);
@@ -44,7 +44,7 @@ public class LineInputPen : MonoBehaviour
         }
         else
         {
-            if (XrInput.Right_Primary.WasReleasedThisFrame()&& Pressed)
+            if (XrInput.Right_Grip.WasReleasedThisFrame()&& Pressed)
             {
                 Debug.Log("ButtonUp");
                 Pressed = false;
@@ -52,23 +52,18 @@ public class LineInputPen : MonoBehaviour
                 {
                     SmoothSpline(Line, iterations, smoothingFactor);
 
-
-                    var Seepath = new GameObject("Drawn", new[] { typeof(LineRenderer) });
-                    var L = Seepath.GetComponent<LineRenderer>();
-                    //Debug.Log(Line.Count);
-                    L.positionCount = 60;
-                    L.SetPositions(ConvertSplineToArray(Line, 60));
-                    L.startWidth = 0.01f;
-                    L.endWidth = 0.01f;
-                    L.material = new Material(Shader.Find("Unlit/Color"));
-                    L.material.color = Color.red;
                     
-                    // var ShownLine = new GameObject("Line").AddComponent<LineRenderer>();
-                    // ShownLine.positionCount = 60;
-                    // ShownLine.startWidth = 0.1f;
-                    // ShownLine.endWidth = 0.1f;
-
-                    //var Points = TranslateToOrigin(RotateToUp(ScaleToSetSize(ConvertSplineToArray(Line, 60),0.45f)));
+                    // //Show the drawn Line
+                    // var Seepath = new GameObject("Drawn", new[] { typeof(LineRenderer) });
+                    // var L = Seepath.GetComponent<LineRenderer>();
+                    // //Debug.Log(Line.Count);
+                    // L.positionCount = 60;
+                    // L.SetPositions(ConvertSplineToArray(Line, 60));
+                    // L.startWidth = 0.01f;
+                    // L.endWidth = 0.01f;
+                    // L.material = new Material(Shader.Find("Unlit/Color"));
+                    // L.material.color = Color.red;
+                    
                     
                     var Points = ConvertSplineToArray(Line, 60);
                     Points = ScaleToSetSize(Points,0.45f);
@@ -89,7 +84,8 @@ public class LineInputPen : MonoBehaviour
                 Line.Clear();
                 Line = new Spline();
                 
-                //GetComponent<LineContainerPen>().CheckData(ShapeSamples.Last());
+                //Compare the current Line with the stored ones
+                GetComponent<LineContainerPen>().CheckData(ShapeSamples.Last());
             }
         }
 
@@ -100,12 +96,12 @@ public class LineInputPen : MonoBehaviour
         }
 
 
-        if (XrInput.Left_Primary.WasPressedThisFrame())
-        {
-            Debug.Log($"saving with samples: {ShapeSamples.Count}");
-            var Avgs = JsonConvert.SerializeObject(AveragePoints(ShapeSamples));
-            File.WriteAllText(Application.dataPath+$"/Shapes/{ShapeName}.txt",Avgs);
-        }
+        // if (XrInput.Left_Primary.WasPressedThisFrame())
+        // {
+        //     Debug.Log($"saving with samples: {ShapeSamples.Count}");
+        //     var Avgs = JsonConvert.SerializeObject(AveragePoints(ShapeSamples));
+        //     File.WriteAllText(Application.dataPath+$"/Shapes/{ShapeName}.txt",Avgs);
+        // }
         
     }
 
