@@ -5,7 +5,7 @@ I wanted to figure out how i can identify what shape the user's hand is making i
 
 ## Implementation
 - Originally, i made my own algorithm for this project, however, dropping it for Procrustes Analysis due to accuracy reasons.
-- The Letters used for comparision are drawn about 10-20 times, and the average of each vertex is reason, creating the "Perfect" human drawn shape.
+- The Letters used for comparision are drawn about 10-20 times, and the average of each vertex is taken, creating the "Perfect" human drawn shape.
 - I implemented this feature in a spell casting experience, and letter recognition.
 
 You can learn more details from a small informal project report i wrote here: 
