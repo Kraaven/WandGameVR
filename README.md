@@ -17,3 +17,6 @@ https://github.com/user-attachments/assets/03ec6981-d32d-45fc-ad5e-90cfafb60146
 
 https://github.com/user-attachments/assets/0cbf03bf-1e8a-48a3-a214-c3f7d51a5ab0
 
+
+## Note
+Since the creation of this project, i started working on another that involes the $P recogniser for point cloud recognition. Although somewhat different, it does get the job done, with a few pros and cons over this one. here is the [repo](https://github.com/Kraaven/SchoolVR).
